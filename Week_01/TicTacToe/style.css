@@ -1,0 +1,36 @@
+/* 标题 */
+.title {
+  text-align: center;
+  font-weight: bold;
+  font-size: 30px;
+  font-family: Arial, Helvetica, sans-serif;
+  margin-top: 60px;
+  margin-bottom: 30px;
+}
+
+/* 棋盘容器 */
+#board {
+  text-align: center;
+}
+
+/* 棋盘小方格 */
+.square {
+  width: 100px;
+  height: 100px;
+  line-height: 100px;
+  font-size: 50px;
+  font-weight: bold;
+  background: #2db7f5;
+  color: white;
+  display: inline-block;
+  border: 1px solid white;
+  vertical-align: middle;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.square:hover {
+  border-width: 2px;
+  transform: scale(1.06);
+  transition: transform 0.2s ease-in-out;
+}
