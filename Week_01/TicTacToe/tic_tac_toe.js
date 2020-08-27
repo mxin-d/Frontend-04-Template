@@ -55,6 +55,27 @@ const getSquare = (row, col) => {
 }
 
 /**
+ * 计算即将获胜者
+ * @param {*} pattern
+ * @param {*} shape
+ */
+const calculateWillWin = (pattern, shape) => {
+  const length = 3
+  for (let i = 0; i < length; i++) {
+    for (let j = 0; j < length; j++) {
+      // 如果不为空直接跳过
+      if (pattern[i * 3 + j] !== 0) continue
+
+      // 克隆临时棋盘 模拟落子
+      let tempPattern = clone(pattern)
+      tempPattern[i * 3 + j] = shape
+      if (calculateWinner(tempPattern, shape)) return [i, j]
+    }
+  }
+  return null
+}
+
+/**
  * 最优选择
  * @param {*} pattern
  * @param {*} shape
@@ -92,27 +113,6 @@ const bestChoice = (pattern, shape) => {
     point: point,
     result: point ? result : 0,
   }
-}
-
-/**
- * 计算即将获胜者
- * @param {*} pattern
- * @param {*} shape
- */
-const calculateWillWin = (pattern, shape) => {
-  const length = 3
-  for (let i = 0; i < length; i++) {
-    for (let j = 0; j < length; j++) {
-      // 如果不为空直接跳过
-      if (pattern[i * 3 + j] !== 0) continue
-
-      // 克隆临时棋盘 模拟落子
-      let tempPattern = clone(pattern)
-      tempPattern[i * 3 + j] = shape
-      if (calculateWinner(tempPattern, shape)) return [i, j]
-    }
-  }
-  return null
 }
 
 /**
@@ -158,29 +158,6 @@ const calculateWinner = (pattern, shape) => {
 }
 
 /**
- * 玩家落子
- * @param {*} col 列
- * @param {*} row 行
- */
-const userMove = (row, col) => {
-  if (!pattern[row * 3 + col] && !isFinish) {
-    pattern[row * 3 + col] = shape
-    getResult()
-    computerMove()
-  }
-}
-
-/**
- * 电脑落子
- */
-const computerMove = () => {
-  const choice = bestChoice(pattern, shape)
-  console.log(choice)
-  if (choice.point) pattern[choice.point[0] * 3 + choice.point[1]] = shape
-  getResult()
-}
-
-/**
  * 游戏获胜及后续处理
  * @param {*} pattern
  * @param {*} shape
@@ -198,7 +175,29 @@ const getResult = () => {
 }
 
 /**
- * 重新开发
+ * 玩家落子
+ * @param {*} col 列
+ * @param {*} row 行
+ */
+const userMove = (row, col) => {
+  if (!pattern[row * 3 + col] && !isFinish) {
+    pattern[row * 3 + col] = shape
+    getResult()
+    computerMove()
+  }
+}
+
+/**
+ * 电脑落子
+ */
+const computerMove = () => {
+  const choice = bestChoice(pattern, shape)
+  if (choice.point) pattern[choice.point[0] * 3 + choice.point[1]] = shape
+  getResult()
+}
+
+/**
+ * 重新开始
  */
 const replay = () => {
   // 重置棋盘数据
