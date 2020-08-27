@@ -1,16 +1,46 @@
+/* 通用样式 */
+body {
+  font-family: Arial, Helvetica, sans-serif;
+  text-align: center;
+}
+
+.disabled {
+  visibility: hidden;
+}
+
 /* 标题 */
 .title {
-  text-align: center;
   font-weight: bold;
   font-size: 30px;
-  font-family: Arial, Helvetica, sans-serif;
-  margin-top: 60px;
-  margin-bottom: 30px;
+  margin-top: 88px;
+}
+
+/* 获胜者提示文字 */
+#winner__text {
+  text-align: center;
+  color: orangered;
+  height: 40px;
+  font-size: 24px;
+  margin: 15px auto;
+}
+
+/* 重玩 */
+#replay {
+  width: 100px;
+  height: 30px;
+  font-size: 24px;
+  cursor: pointer;
+  margin: 20px auto;
+}
+
+#replay:hover {
+  transform: scale(1.1);
+  transition: transform 0.1s ease-in-out;
 }
 
 /* 棋盘容器 */
 #board {
-  text-align: center;
+  height: 333px;
 }
 
 /* 棋盘小方格 */
@@ -32,5 +62,7 @@
 .square:hover {
   border-width: 2px;
   transform: scale(1.06);
-  transition: transform 0.2s ease-in-out;
+  transition: transform 0.1s ease-in-out;
 }
+
+
