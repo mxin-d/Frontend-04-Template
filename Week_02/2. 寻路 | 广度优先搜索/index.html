@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>地图编辑器</title>
+    <style>
+      #container {
+        width: 601px;
+        overflow: hidden;
+      }
+      .cell {
+        display: block;
+        float: left;
+        width: 5px;
+        height: 5px;
+        line-height: 7px;
+        background-color: grey;
+        border-bottom: 1px solid white;
+        border-right: 1px solid white;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="container"></div>
+    <button onclick="save()">save</button>
+    <script>
+      // 初始化地图数据
+      let map = localStorage['map']
+        ? JSON.parse(localStorage['map'])
+        : Array(10000).fill(0)
+
+      // 地图容器
+      let container = document.getElementById('container')
+
+      // 地图尺寸
+      const CELL_LENGTH = 100
+
+      // 鼠标事件标识
+      let mousedown = false,
+        clear = false
+
+      /**
+       * 绘制地图
+       */
+      const render = () => {
+        for (let y = 0; y < CELL_LENGTH; y++) {
+          for (let x = 0; x < CELL_LENGTH; x++) {
+            let cell = document.createElement('div')
+            cell.classList.add('cell')
+
+            if (map[100 * y + x] === 1) cell.style.backgroundColor = 'black'
+
+            // 鼠标事件绑定
+            cell.addEventListener('mousemove', e => {
+              if (mousedown) {
+                if (clear) {
+                  cell.style.backgroundColor = ''
+                  map[100 * y + x] = 0
+                } else {
+                  cell.style.backgroundColor = 'black'
+                  map[100 * y + x] = 1
+                }
+              }
+            })
+            container.appendChild(cell)
+          }
+        }
+      }
+
+      /**
+       * 事件绑定
+       */
+      const eventBinding = () => {
+        document.addEventListener('mousedown', e => {
+          mousedown = true
+          clear = e.which === 3
+        })
+
+        document.addEventListener('mouseup', () => {
+          mousedown = false
+        })
+
+        document.addEventListener('contextmenu', e => {
+          e.preventDefault()
+        })
+      }
+
+      /**
+       * 保存地图数据
+       */
+      const save = () => {
+        localStorage['map'] = JSON.stringify(map)
+      }
+
+      render()
+      eventBinding()
+    </script>
+  </body>
+</html>
