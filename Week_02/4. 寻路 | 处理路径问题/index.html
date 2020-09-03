@@ -71,18 +71,25 @@
       /**
        * 寻路
        * 广度优先搜索，队列
-       * 如果使用深度优先搜索，栈
        */
-      const path = (map, start, end) => {
+      const findPath = async (map, start, end) => {
+        // 拷贝地图数据
+        let table = Object.create(map)
         // 初始化队列，起点入队
         let queue = [start]
 
-        const insert = (x, y) => {
+        const insert = async (x, y, pre) => {
           // 边界不走
           if (x < 0 || x >= 100 || y < 0 || y >= 100) return
 
           // 遇到墙不走，为1的点
           if (map[y * 100 + x]) return
+
+          table[100 * y + x] = pre
+          //   console.log(pre)
+
+          // 将走过的点设置背景颜色便于观察寻路过程
+          container.children[y * 100 + x].style.backgroundColor = '#2db7f5'
 
           // 走过的点设置为2
           map[y * 100 + x] = 2
@@ -92,19 +99,37 @@
         while (queue.length) {
           // 某一个点出队
           let [x, y] = queue.shift()
-          console.log(x, y)
 
-          // 如果跟目标点相同返回 true
-          if (x === end[0] && y === end[1]) return true
+          // 根据目标节点坐标 找回到起始点的路径
+          if (x === end[0] && y === end[1]) {
+            let path = []
+
+            // 寻找路径
+            while (x !== start[0] || y !== start[1]) {
+              path.push(table[y * 100 + x])
+
+              // 标记路径坐标
+              await sleep(3)
+              ;[x, y] = table[y * 100 + x]
+              container.children[y * 100 + x].style.backgroundColor = 'orange'
+            }
+
+            return path
+          }
 
           // 上下左右四个方向寻找目标
-          insert(x - 1, y)
-          insert(x + 1, y)
-          insert(x, y - 1)
-          insert(x, y + 1)
+          await insert(x - 1, y, [x, y])
+          await insert(x + 1, y, [x, y])
+          await insert(x, y - 1, [x, y])
+          await insert(x, y + 1, [x, y])
+
+          await insert(x - 1, y - 1, [x, y])
+          await insert(x + 1, y + 1, [x, y])
+          await insert(x + 1, y - 1, [x, y])
+          await insert(x - 1, y + 1, [x, y])
         }
 
-        return false
+        return null
       }
 
       /**
@@ -131,6 +156,15 @@
       const save = () => {
         localStorage['map'] = JSON.stringify(map)
         alert('Saved successfully!')
+      }
+
+      /**
+       * 异步延时
+       */
+      const sleep = duration => {
+        return new Promise((resolve, reject) => {
+          setTimeout(resolve, duration)
+        })
       }
 
       render()
