@@ -66,6 +66,23 @@
     |<MultiplicativeExpression></><Number>
 ```
 
+### 8. 使用 LL 算法构建 AST | 正则表达式
+* 利用正则表达式（）特性捕获多种或的条件，将符合条件的内容匹配出来
+* exec 使用：https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/RegExp/exec
+
+### 9. 使用 LL 算法构建 AST | LL词法分析
+* 使用JavaScript新特性 function* 及 yield
+* 生成器函数：https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Statements/function*
+
+### 10. 使用 LL 算法构建 AST | LL语法分析（一）
+* 对应乘法、除法的规则补全 \* 和 \/ `MultiplicativeExpression` 逻辑
+
+### 11. 使用 LL 算法构建 AST | LL语法分析（二）
+* 补全加减法 `AdditiveExpression` 逻辑
+* 补全最终 `Expression` 逻辑
+
+
+
 
 
 
