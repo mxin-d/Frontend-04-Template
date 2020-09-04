@@ -25,6 +25,47 @@
     <div id="container"></div>
     <button onclick="save()">save</button>
     <script>
+      /**
+       * 排序类
+       */
+      class Sorted {
+        constructor(data, compare) {
+          this.data = data.slice()
+          this.compare = compare || ((a, b) => a - b)
+        }
+
+        /**
+         * 获取最小数组
+         */
+        take() {
+          if (!this.data.length) return
+          let min = this.data[0]
+          let minIndex = 0
+
+          for (let index = 1; index < this.data.length; index++) {
+            if (this.compare(this.data[index], min) < 0) {
+              min = this.data[index]
+              minIndex = index
+            }
+          }
+
+          this.data[minIndex] = this.data[this.data.length - 1]
+          this.data.pop()
+          return min
+        }
+
+        /**
+         * 插入数据
+         */
+        give(v) {
+          this.data.push(v)
+        }
+
+        get length() {
+          return this.data.length
+        }
+      }
+
       // 初始化地图数据
       let map = localStorage['map']
         ? JSON.parse(localStorage['map'])
@@ -75,8 +116,9 @@
       const findPath = async (map, start, end) => {
         // 拷贝地图数据
         let table = Object.create(map)
+
         // 初始化队列，起点入队
-        let queue = [start]
+        let queue = new Sorted([start], (a, b) => distance(a) - distance(b))
 
         const insert = async (x, y, pre) => {
           // 边界不走
@@ -85,19 +127,27 @@
           // 遇到墙不走，为1的点
           if (table[y * 100 + x]) return
 
-          // 前置节点保存到table中
-          table[100 * y + x] = pre
+          await sleep(1)
 
           // 将走过的点设置背景颜色便于观察寻路过程
           container.children[y * 100 + x].style.backgroundColor = '#2db7f5'
-
+          // 前置节点保存到table中
+          table[100 * y + x] = pre
           // 将点保存到队列中
-          queue.push([x, y])
+          queue.give([x, y])
+        }
+
+        /**
+         * 计算距离
+         * 平方运算
+         */
+        const distance = point => {
+          return (point[0] - end[0]) ** 2 + (point[1] - end[1]) ** 2
         }
 
         while (queue.length) {
           // 某一个点出队
-          let [x, y] = queue.shift()
+          let [x, y] = queue.take()
 
           // 根据目标节点坐标 找回到起始点的路径
           if (x === end[0] && y === end[1]) {
@@ -106,9 +156,8 @@
             // 寻找路径
             while (x !== start[0] || y !== start[1]) {
               path.push(table[y * 100 + x])
-
               // 标记路径坐标
-              await sleep(3)
+              await sleep(1)
               ;[x, y] = table[y * 100 + x]
               container.children[y * 100 + x].style.backgroundColor = 'orange'
             }
