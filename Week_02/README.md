@@ -40,17 +40,31 @@
 
 ### 7. 使用 LL 算法构建 AST | 四则运算
 * `AST` 抽象语法树概念，编程语言分词，将词根据规则构建语法树
-* Left left 算法
+* Left left 算法 
 * Left Right 算法
 * 四则运算规则
     - TokenNumber
-        - 1 2 3 4 5 6 7 8 9 0 的组合
+        - 1 2 3 4 5 6 7 8 9 0 的组合，允许插入小数点
     - Operator
         - \+ \- \* \/ 之一
     - Whitespace
         - \<SP>
     - LineTerminator
         - \<LF>\<CR>
+```
+<Expression>::=
+    <AdditiveExpression><EOF>
+
+<AdditiveExpression>::=
+    <MultiplicativeExpression>
+    |<AdditiveExpression><+><MultiplicativeExpression>
+    |<AdditiveExpression><-><MultiplicativeExpression>
+
+<MultiplicativeExpression>::=
+    <Number>
+    |<MultiplicativeExpression><*><Number>
+    |<MultiplicativeExpression></><Number>
+```
 
 
 
