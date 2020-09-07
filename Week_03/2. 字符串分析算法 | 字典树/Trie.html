@@ -8,6 +8,7 @@
     insert(word) {
       let node = this.root
       for (let c of word) {
+        console.log(c)
         if (!node[c]) {
           node[c] = Object.create(null)
         }
@@ -17,6 +18,7 @@
       if (!($ in node)) {
         node[$] = 0
       }
+      console.log(node)
       node[$]++
     }
 
@@ -48,7 +50,7 @@
   }
 
   let trie = new Trie()
-  for (let i = 0; i < 100000; i++) {
+  for (let i = 0; i < 3; i++) {
     trie.insert(randomWord(4))
   }
   console.log(trie)
