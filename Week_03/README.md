@@ -30,3 +30,7 @@
 ### 5. proxy与双向绑定 | proxy的基本用法
 * 了解 `proxy` 的基本使用，”强大且危险“，可预测性低
 * 使用 `set` 设置拦截操作， 配合 `Reflect` 使用
+
+### 6. proxy与双向绑定 | 模仿reactive实现原理（一）
+* 了解 `proxy` 的 `get` 与 `set` 用法，包装简易版 reactive
+* 使用 `Reflect` 对应的 `get` 与 `set` 辅助完成
