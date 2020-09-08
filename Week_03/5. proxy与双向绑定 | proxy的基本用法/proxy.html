@@ -1,0 +1,16 @@
+<script>
+  let obj = {
+    a: 1,
+    b: 2,
+  }
+
+  const proxy = new Proxy(obj, {
+    set() {
+      console.log([...arguments])
+      return Reflect.set(...arguments)
+    },
+  })
+
+  proxy.c = 3
+
+</script>
