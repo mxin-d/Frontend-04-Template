@@ -1,0 +1,31 @@
+<script>
+  const callbacks = []
+  const object = {
+    a: 1,
+    b: 2,
+  }
+
+  const proxy = reactive(object)
+
+  effect(() => {
+    console.log('effect', proxy.a)
+  })
+
+  function effect(callback) {
+    callbacks.push(callback)
+  }
+
+  function reactive(object) {
+    return new Proxy(object, {
+      set() {
+        Reflect.set(...arguments)
+        for (const callback of callbacks) {
+          callback()
+        }
+      },
+      get() {
+        return Reflect.get(...arguments)
+      },
+    })
+  }
+</script>

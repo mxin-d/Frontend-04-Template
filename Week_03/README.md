@@ -34,3 +34,6 @@
 ### 6. proxy与双向绑定 | 模仿reactive实现原理（一）
 * 了解 `proxy` 的 `get` 与 `set` 用法，包装简易版 reactive
 * 使用 `Reflect` 对应的 `get` 与 `set` 辅助完成
+
+### 7. proxy与双向绑定 | 模仿reactive实现原理（二）
+* `set` 时执行回调函数，显示变化后的数据
