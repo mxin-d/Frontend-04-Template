@@ -1,0 +1,60 @@
+<script>
+  const callbacks = new Map()
+  const reactivities = new Map()
+  let usedReactivities = []
+
+  const object = {
+    a: {
+      b: 3,
+    },
+    b: 2,
+  }
+
+  const proxy = reactive(object)
+
+  effect(() => {
+    console.log('effect proxy.a.b', proxy.a.b)
+    console.log('effect proxy.b', proxy.b)
+  })
+
+  function effect(cb) {
+    usedReactivities = []
+    cb()
+    for (const reactivity of usedReactivities) {
+      // 判断回调函数中是否包含了 target
+      const [target, property] = reactivity
+
+      if (!callbacks.has(target)) {
+        callbacks.set(target, new Map())
+      }
+      if (!callbacks.get(target).has(property)) {
+        callbacks.get(target).set(property, [])
+      }
+
+      callbacks.get(target).get(property).push(cb)
+    }
+  }
+
+  function reactive(object) {
+    if (reactivities.has(object)) return reactivities.get(object)
+
+    const proxy = new Proxy(object, {
+      set(target, property, value, receiver) {
+        Reflect.set(...arguments)
+        if (callbacks.get(target))
+          if (callbacks.get(target).get(property))
+            for (const cb of callbacks.get(target).get(property)) cb()
+      },
+      get(target, property) {
+        usedReactivities.push([target, property])
+        if (typeof target[property] === 'object')
+          return reactive(target[property])
+
+        return Reflect.get(...arguments)
+      },
+    })
+
+    reactivities.set(object, proxy)
+    return proxy
+  }
+</script>

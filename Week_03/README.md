@@ -41,3 +41,6 @@
 ### 8. proxy与双向绑定 | 模仿reactive实现原理（三）
 * 将 `get` 过的对象 `target` 及其内部的 `property` 保存到 `usedReactivities` 中
 * 根据 `usedReactivities` 中的内容在 `effect` 中处理 `callback` 与 `property` 的对应关系， `set` 时调用对应 `callback`
+
+### 9. proxy与双向绑定 | 优化reactive
+* 支持级联操作，需要在 `get` 到的内容进行类型校验，如 `object` 
