@@ -51,6 +51,10 @@
 * 替换 `Map` 使用 `WeakMap`
 * 回收 `usedReactivities`
 
-## 11. 使用Range实现DOM精确操作 | 基本拖拽
+### 11. 使用Range实现DOM精确操作 | 基本拖拽
 * 事件绑定及解绑
 * 处理鼠标位置坐标
+
+### 12. 使用Range实现DOM精确操作 | 正常流里的拖拽
+* 保存所有 `range`
+* 寻找最近的 `range` 并 `insertNode`

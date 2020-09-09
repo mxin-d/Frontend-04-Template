@@ -1,0 +1,69 @@
+<div id="container">
+  文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字
+</div>
+<div
+  id="dragable"
+  style="
+    display: inline-block;
+    width: 100px;
+    height: 100px;
+    background-color: pink;
+  "
+></div>
+<script>
+  const dragable = document.getElementById('dragable')
+
+  let baseX = 0,
+    baseY = 0
+
+  const handler = function (event) {
+    const startX = event.clientX,
+      startY = event.clientY
+
+    const up = event => {
+      baseX = baseX + event.clientX - startX
+      baseY = baseY + event.clientY - startY
+      document.removeEventListener('mousemove', move)
+      document.removeEventListener('mouseup', up)
+    }
+
+    const move = event => {
+      const range = getNearest(event.clientX, event.clientY)
+      range.insertNode(dragable)
+    }
+
+    document.addEventListener('mousemove', move)
+    document.addEventListener('mouseup', up)
+  }
+
+  dragable.addEventListener('mousedown', handler)
+  document.addEventListener('selectstart', event => event.preventDefault())
+
+  // 操作range
+  const ranges = []
+  const container = document.getElementById('container')
+
+  for (let i = 0; i < container.childNodes[0].textContent.length; i++) {
+    const range = document.createRange()
+    range.setStart(container.childNodes[0], i)
+    range.setEnd(container.childNodes[0], i)
+
+    ranges.push(range)
+  }
+
+  function getNearest(x, y) {
+    let min = Infinity
+    let nearest = null
+
+    for (const range of ranges) {
+      const rect = range.getBoundingClientRect()
+      const distance = (rect.x - x) ** 2 + (rect.y - y) ** 2
+      if (distance < min) {
+        nearest = range
+        min = distance
+      }
+    }
+
+    return nearest
+  }
+</script>
