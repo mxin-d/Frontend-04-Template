@@ -45,3 +45,8 @@
 ### 9. proxy与双向绑定 | 优化reactive
 * 支持级联操作，需要在 `get` 到的内容进行类型校验，如 `object` ，如果属性为对象，多次调用 `reactive`
 * 将 `proxy` 缓存到 `reactivities` 中，每次调用 `reactive` 时在 `reactivities` 查找，如果已存在直接返回，没有的话先存入 `reactivities`
+
+### 10. proxy与双向绑定 | reactivity响应式对象
+* 数据双向绑定，初始化响应式数据
+* 替换 `Map` 使用 `WeakMap`
+* 回收 `usedReactivities`

@@ -1,0 +1,86 @@
+<html>
+  <body>
+    <input id="r" type="range" max="255" min="0" />
+    <input id="g" type="range" max="255" min="0" />
+    <input id="b" type="range" max="255" min="0" />
+    <p id="color_text"></p>
+    <div id="color" style="width: 100px; height: 100px"></div>
+  </body>
+</html>
+<script>
+  const callbacks = new WeakMap()
+  const reactivities = new WeakMap()
+  let usedReactivities = []
+
+  const object = {
+    r: 0,
+    g: 0,
+    b: 0,
+  }
+
+  const proxy = reactive(object)
+
+  effect(() => {
+    const { r, g, b } = proxy
+    document.getElementById('r').value = r
+    document.getElementById('b').value = b
+    document.getElementById('g').value = g
+
+    document.getElementById(
+      'color'
+    ).style.backgroundColor = `rgb(${r},${g},${b})`
+    document.getElementById('color_text').innerText = `rgb：${r},${g},${b}`
+  })
+
+  document
+      .getElementById('r')
+      .addEventListener('input', event => (proxy.r = event.target.value))
+    document
+      .getElementById('g')
+      .addEventListener('input', event => (proxy.g = event.target.value))
+    document
+      .getElementById('b')
+      .addEventListener('input', event => (proxy.b = event.target.value))
+
+  function effect(cb) {
+    usedReactivities.splice(0)
+    cb()
+    for (const reactivity of usedReactivities) {
+      // 判断回调函数中是否包含了 target
+      const [target, property] = reactivity
+
+      if (!callbacks.has(target)) {
+        callbacks.set(target, new Map())
+      }
+      if (!callbacks.get(target).has(property)) {
+        callbacks.get(target).set(property, [])
+      }
+
+      callbacks.get(target).get(property).push(cb)
+    }
+  }
+
+  function reactive(object) {
+    if (reactivities.has(object)) return reactivities.get(object)
+
+    const proxy = new Proxy(object, {
+      set(target, property, value, receiver) {
+        Reflect.set(...arguments)
+        if (callbacks.get(target))
+          if (callbacks.get(target).get(property))
+            for (const cb of callbacks.get(target).get(property)) cb()
+        usedReactivities.splice(0)
+      },
+      get(target, property) {
+        usedReactivities.push([target, property])
+        if (typeof target[property] === 'object')
+          return reactive(target[property])
+
+        return Reflect.get(...arguments)
+      },
+    })
+
+    reactivities.set(object, proxy)
+    return proxy
+  }
+</script>
