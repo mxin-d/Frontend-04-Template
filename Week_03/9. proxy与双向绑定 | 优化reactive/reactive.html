@@ -1,24 +1,48 @@
+<html>
+  <body>
+    <input id="r" type="range" max="255" min="0" />
+    <input id="g" type="range" max="255" min="0" />
+    <input id="b" type="range" max="255" min="0" />
+    <p id="color_text"></p>
+    <div id="color" style="width: 100px; height: 100px"></div>
+  </body>
+</html>
 <script>
-  const callbacks = new Map()
-  const reactivities = new Map()
+  const callbacks = new WeakMap()
+  const reactivities = new WeakMap()
   let usedReactivities = []
 
   const object = {
-    a: {
-      b: 3,
-    },
-    b: 2,
+    r: 0,
+    g: 0,
+    b: 0,
   }
 
   const proxy = reactive(object)
 
   effect(() => {
-    console.log('effect proxy.a.b', proxy.a.b)
-    console.log('effect proxy.b', proxy.b)
+    document.getElementById('r').value = proxy.r
+    document.getElementById('b').value = proxy.b
+    document.getElementById('g').value = proxy.g
+    const { r, g, b } = proxy
+    document.getElementById(
+      'color'
+    ).style.backgroundColor = `rgb(${r},${g},${b})`
+    document.getElementById('color_text').innerText = `rgb：${r},${g},${b}`
   })
 
+  document
+    .getElementById('r')
+    .addEventListener('input', event => (proxy.r = event.target.value))
+  document
+    .getElementById('g')
+    .addEventListener('input', event => (proxy.g = event.target.value))
+  document
+    .getElementById('b')
+    .addEventListener('input', event => (proxy.b = event.target.value))
+
   function effect(cb) {
-    usedReactivities = []
+    usedReactivities.splice(0)
     cb()
     for (const reactivity of usedReactivities) {
       // 判断回调函数中是否包含了 target
@@ -44,6 +68,7 @@
         if (callbacks.get(target))
           if (callbacks.get(target).get(property))
             for (const cb of callbacks.get(target).get(property)) cb()
+        usedReactivities.splice(0)
       },
       get(target, property) {
         usedReactivities.push([target, property])

@@ -43,4 +43,5 @@
 * 根据 `usedReactivities` 中的内容在 `effect` 中处理 `callback` 与 `property` 的对应关系， `set` 时调用对应 `callback`
 
 ### 9. proxy与双向绑定 | 优化reactive
-* 支持级联操作，需要在 `get` 到的内容进行类型校验，如 `object` 
+* 支持级联操作，需要在 `get` 到的内容进行类型校验，如 `object` ，如果属性为对象，多次调用 `reactive`
+* 将 `proxy` 缓存到 `reactivities` 中，每次调用 `reactive` 时在 `reactivities` 查找，如果已存在直接返回，没有的话先存入 `reactivities`
