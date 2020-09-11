@@ -50,6 +50,12 @@
 * 数据双向绑定，初始化响应式数据
 * 替换 `Map` 使用 `WeakMap`
 * 回收 `usedReactivities`
+* 封装简易版reactivity api
+    - reactive
+    - effect
+    - track
+    - trigger
+    - computed
 
 ### 11. 使用Range实现DOM精确操作 | 基本拖拽
 * 事件绑定及解绑
