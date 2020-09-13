@@ -56,6 +56,7 @@
     - track
     - trigger
     - computed
+* 整理了一篇博客：https://juejin.im/post/6871164853751873550
 
 ### 11. 使用Range实现DOM精确操作 | 基本拖拽
 * 事件绑定及解绑
