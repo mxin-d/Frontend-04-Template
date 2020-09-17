@@ -437,6 +437,28 @@
 - 协变与逆变： https://jkchao.github.io/typescript-book-chinese/tips/covarianceAndContravariance.html
 
 ### 6. JS语言通识 | 一般命令式编程语言的设计方式
+- Atom
+    - Identifier
+    - Literal
+- Expression
+    - Atom
+    - Operator
+    - Punctuator
+- Statement
+    - Expression
+    - Keyword
+    - Punctuator
+- Structure
+    - Function
+    - Class
+    - Process
+    - Namespace
+    - ...
+- Program
+    - Program
+    - Module
+    - Package
+    - Library
 
 ### 7. JS类型 | Number
 - 详情见重学前端课程
