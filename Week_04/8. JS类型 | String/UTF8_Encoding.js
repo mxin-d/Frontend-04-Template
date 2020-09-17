@@ -1,4 +1,3 @@
-// const Buffer = require('buffer');
 /**
  * 字符串 UTF-8 编码
  * @param {*} string
