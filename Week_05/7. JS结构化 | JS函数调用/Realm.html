@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <title>Realm 脑图</title>
+        <style>
+            ::-webkit-scrollbar {
+                display: none;
+            }
+            html,
+            body {
+                overflow: hidden;
+                margin: 0;
+            }
+        </style>
+    </head>
+    <body>
+        <div id="mountNode"></div>
+        <script>
+            /*Fixing iframe window.innerHeight 0 issue in Safari*/ document.body
+                .clientHeight;
+        </script>
+        <script src="https://gw.alipayobjects.com/os/antv/pkg/_antv.g6-3.1.1/build/g6.js"></script>
+        <script src="https://gw.alipayobjects.com/os/antv/assets/lib/jquery-3.2.1.min.js"></script>
+        <script src="https://gw.alipayobjects.com/os/antv/pkg/_antv.hierarchy-0.5.0/build/hierarchy.js"></script>
+        <script>
+            let set = new Set();
+            let objects = [
+                eval,
+                isFinite,
+                isNaN,
+                parseFloat,
+                parseInt,
+                decodeURI,
+                decodeURIComponent,
+                encodeURI,
+                encodeURIComponent,
+                Array,
+                Date,
+                RegExp,
+                Promise,
+                Proxy,
+                Map,
+                WeakMap,
+                Set,
+                WeakSet,
+                Function,
+                Boolean,
+                String,
+                Number,
+                Symbol,
+                Object,
+                Error,
+                EvalError,
+                RangeError,
+                ReferenceError,
+                SyntaxError,
+                TypeError,
+                URIError,
+                ArrayBuffer,
+                SharedArrayBuffer,
+                DataView,
+                Float32Array,
+                Float64Array,
+                Int8Array,
+                Int16Array,
+                Int32Array,
+                Uint8Array,
+                Uint16Array,
+                Uint32Array,
+                Uint8ClampedArray,
+                Atomics,
+                JSON,
+                Math,
+                Reflect,
+            ];
+            objects.forEach(o => set.add(o));
+
+            const realm = {
+                id: 'Realm',
+                children: objects.map(o => {
+                    return {
+                        id: o,
+                        children: [],
+                    };
+                }),
+            };
+
+            const children = realm.children;
+
+            for (let i = 0; i < children.length; i++) {
+                let o = children[i].id;
+                for (let p of Object.getOwnPropertyNames(o)) {
+                    const d = Object.getOwnPropertyDescriptor(o, p);
+                    if (
+                        (d.value !== null && typeof d.value === 'object') ||
+                        typeof d.value === 'function'
+                    ) {
+                        if (!set.has(d.value)) {
+                            children[i].children.push({
+                                id: p,
+                                children: [],
+                            });
+                        }
+                    }
+                    if (d.get) {
+                        if (!set.has(d.get)) {
+                            children[i].children.push({
+                                id: p,
+                                children: [],
+                            });
+                        }
+                    }
+                    if (d.set) {
+                        if (!set.has(d.set)) {
+                            children[i].children.push({
+                                id: p,
+                                children: [],
+                            });
+                        }
+                    }
+                }
+            }
+
+            let graph = new G6.TreeGraph({
+                container: 'mountNode',
+                width: window.innerWidth,
+                height: window.innerHeight,
+                pixelRatio: 2,
+                modes: {
+                    default: ['drag-canvas', 'zoom-canvas'],
+                },
+                defaultNode: {
+                    size: 16,
+                    anchorPoints: [
+                        [0, 0.5],
+                        [1, 0.5],
+                    ],
+                    style: {
+                        fill: '#40a9ff',
+                        stroke: '#096dd9',
+                    },
+                },
+                defaultEdge: {
+                    shape: 'cubic-horizontal',
+                    style: {
+                        stroke: '#A3B1BF',
+                    },
+                },
+                layout: {
+                    type: 'dendrogram',
+                    direction: 'LR', // H / V / LR / RL / TB / BT
+                    nodeSep: 30,
+                    rankSep: 100,
+                },
+            });
+
+            graph.node(function (node) {
+                return {
+                    size: 26,
+                    style: {
+                        fill: '#40a9ff',
+                        stroke: '#096dd9',
+                    },
+                    label: node.id,
+                    labelCfg: {
+                        position:
+                            node.children && node.children.length > 0
+                                ? 'left'
+                                : 'right',
+                    },
+                };
+            });
+
+            graph.data(realm);
+            graph.render();
+            graph.fitView();
+        </script>
+    </body>
+</html>
