@@ -198,7 +198,59 @@
     - VariableStatement
     - ClassDeclaration
     - LexicalDeclaration
+> 预处理机制，`var` 变量提升
+> 作用域，`var` 函数级作用域，`let/const` 块级作用域
 
 ### 6. JS结构化 | 宏任务和微任务
+* JS执行粒度（运行时）
+    * 宏任务
+    * 微任务 (Promise)
+    * 函数调用 (Execution Context 执行上下文)
+    * 语句/声明 (Completion Record)
+    * 表达式 (Reference)
+    * 直接量/变量/this...
+
+* 事件循环 (Event Loop)
+    - `wait` -> `get code` -> `execute`  循环
+    - 例如浏览器等待一些事件，获取代码，执行然后循环此操作
+    - 例如node 等待 IO 
 
 ### 7. JS结构化 | JS函数调用
+* ECMAScript Code Execution Context
+    - code evaluation state
+    - Function
+    - Script and Module
+    - Realm
+    - LexicalEnvironment
+    - VariableEnvironment
+
+* Generator Execution Context
+    - code evaluation state
+    - Function
+    - Script and Module
+    - Realm
+    - LexicalEnvironment
+    - VariableEnvironment
+    - Generator
+
+* Environment Records
+    - Declarative Environment Records
+        - Function Environment Records
+        - Module Environment Records
+    - Global Environment Records
+    - Object Environment Records
+
+* Clourse
+    - 代码部分 Code
+    - 环境部分 Environment
+        - 有一个 `Object` 和变量的序列组成
+    > 在 `JavaScript` 每一个函数都会生成一个闭包
+    > 每一个函数都会带一个它定义时所在的 `Environment Records`，将其保存在自己的函数对象上，成为一个属性
+
+* Realm (领域，ES2018之后纳入规范)
+    - 在一个 `JavaScript` 引擎实例里，所有的内置对象都会放进 `Realm` 
+    - 在不同的 `Realm` 实例之间，完全互相独立，`instanceof` 可能会失效
+    > 不同的 `iframe` 中创建对象，原型是不一样的，原型需要一个东西去记录
+    > 在JS中，函数表达式和对象直接量均会创建对象
+    > 使用\.做隐式转换也会创建对象
+    > 这些对象也是有原型的，如果没有 `Realm` ，就不知道他们的原型是什么
