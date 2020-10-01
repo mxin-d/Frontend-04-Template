@@ -1,4 +1,4 @@
-# Week_05 总结
+# Week_06 总结
 
 ### 1. 浏览器总论 | 浏览器工作原理总论
 
@@ -18,7 +18,32 @@
 
 
 ### 8. HTTP请求 | HTTP的协议解析
+**IOS-OSI 七层网络模型**
+- HTTP -- require('http')
+    - 应用层
+    - 表示层
+    - 会话层
+- TCP -- require('net')
+    - 传输层
+- Internent 
+    - 网络层
+- 4G/5G/WI-FI
+    - 数据链路层
+    - 物理层
 
+**TCP和IP**
+- TCP
+    - 流
+    - 端口
+
+- IP
+    - 包
+    - IP地址
+    - libnet/libpcap
+
+- HTTP
+    - Request
+    - Response
 
 ### 9. HTTP请求 | 服务端环境准备
 
