@@ -39,6 +39,8 @@ class Request {
             port: this.port,
           },
           () => {
+            console.log(this.toString());
+
             connection.write(this.toString());
           }
         );

@@ -11,10 +11,13 @@ void (async function () {
     },
     body: {
       name: 'mxin',
+      age: '18',
     },
   });
 
+  console.log(request);
+
   const response = await request.send();
 
-  console.log(response);
+  console.log('Response', response);
 })();
