@@ -207,7 +207,6 @@ void (async function () {
     path: '/',
     headers: {
       ['X-Foo2']: 'customed',
-      // ['Content-Type']: 'application/json',
     },
     body: {
       name: 'mxin',
@@ -216,5 +215,5 @@ void (async function () {
 
   let response = await request.send();
 
-  console.log('response', response);
+  console.log(response);
 })();
