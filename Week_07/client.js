@@ -22,5 +22,5 @@ void (async function () {
 
   console.log('Response', response);
   const dom = parser(response.body);
-  console.log(dom);
+  console.log(dom.children);
 })();
