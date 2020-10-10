@@ -17,7 +17,7 @@ function addCSSRules(text) {
 
 /**
  * 匹配
- * 支持：id、class、元素名
+ * 支持：id、class、tag、tag#id、#tag#id、#tag.cls、.cls#id、.cls.cls
  * @param {*} element 元素
  * @param {*} selector 选择器
  */
@@ -36,10 +36,15 @@ function match(element, selector) {
     if (attr && attr.value === selector.replace('.', '')) {
       return true;
     }
-  } else {
-    if (element.tagName === selector) {
-      return true;
-    }
+  } else if (
+    selector
+      .match(/[#.][a-zA-Z]+|[#a-zA-Z]+|[.a-zA-Z]+/g)
+      .indexOf(element.tagName) !== -1
+  ) {
+    return true;
+  }
+  if (element.tagName === selector) {
+    return true;
   }
 
   return false;
@@ -114,7 +119,22 @@ function specificity(selector) {
     } else if (part.charAt(0) === '.') {
       p[2] += 1;
     } else {
-      p[3] += 1;
+      if (part.indexOf('#') !== -1 || part.indexOf('.') !== -1) {
+        const compoundSelector = selector.match(
+          /[#.][a-zA-Z]+|[#a-zA-Z]+|[.a-zA-Z]+/g
+        );
+        for (const cs of compoundSelector) {
+          if (cs.charAt(0) === '#') {
+            p[1] += 1;
+          } else if (cs.charAt(0) === '.') {
+            p[2] += 1;
+          } else {
+            p[3] += 1;
+          }
+        }
+      } else {
+        p[3] += 1;
+      }
     }
   }
   return p;
@@ -162,7 +182,6 @@ function emit(token) {
     // 栈顶元素为当前element的父元素
     top.children.push(element);
     // element.parent = top
-
 
     // 如果非自封闭标签，将该元素入栈
     if (!token.isSelfClosing) {
