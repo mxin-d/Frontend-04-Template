@@ -1,8 +1,30 @@
+const css = require('css');
 const EOF = Symbol('EOF'); // 状态机终止符号 EOF: End Of File
 const stack = [{ type: 'document', children: [] }]; // 用于处理 DOM 树的 栈
 let currentToken = null; // 当前 token
 let currentAttribute = null; // 当前 属性
 let currentTextNode = null; // 当前 文本节点
+let rules = []; // css 规则
+
+/**
+ * 收集 CSS 规则
+ * @param {*} text
+ */
+function addCSSRules(text) {
+  var ast = css.parse(text);
+  console.log(JSON.stringify(ast, null, '   '));
+  rules.push(...ast.stylesheet.rules);
+}
+
+/**
+ * 计算 CSS 属性
+ * @param {*} element
+ */
+function computeCSS(element) {
+  console.log(rules);
+  console.log('compute CSS for Element', element);
+  var elements = stack.slice().reverse();
+}
 
 function emit(token) {
   // 栈顶元素
@@ -28,6 +50,9 @@ function emit(token) {
       }
     }
 
+    // 计算 CSS 属性
+    computeCSS(element);
+
     // 栈顶元素为当前element的父元素
     top.children.push(element);
     element.parent = top;
@@ -45,6 +70,10 @@ function emit(token) {
     if (top.tagName !== token.tagName) {
       throw new Error("Tag start end doesn't match");
     } else {
+      // 遇到 style 标签，添加 css 规则
+      if (top.tagName === 'style') {
+        addCSSRules(top.children[0].content);
+      }
       // 结束标签出栈
       stack.pop();
     }
