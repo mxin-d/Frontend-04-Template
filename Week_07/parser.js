@@ -1,6 +1,6 @@
 const css = require('css');
 const EOF = Symbol('EOF'); // 状态机终止符号 EOF: End Of File
-const stack = [{ type: 'document', children: [] }]; // 用于处理 DOM 树的 栈
+var stack = [{ type: 'document', children: [] }]; // 用于处理 DOM 树的 栈
 let currentToken = null; // 当前 token
 let currentAttribute = null; // 当前 属性
 let currentTextNode = null; // 当前 文本节点
@@ -11,9 +11,38 @@ let rules = []; // css 规则
  * @param {*} text
  */
 function addCSSRules(text) {
-  var ast = css.parse(text);
-  console.log(JSON.stringify(ast, null, '   '));
+  const ast = css.parse(text);
   rules.push(...ast.stylesheet.rules);
+}
+
+/**
+ * 匹配
+ * 支持：id、class、元素名
+ * @param {*} element 元素
+ * @param {*} selector 选择器
+ */
+function match(element, selector) {
+  if (!selector || !element.attributes) {
+    return false;
+  }
+
+  if (selector.charAt(0) === '#') {
+    const attr = element.attributes.filter(attr => attr.name === 'id')[0];
+    if (attr && attr.value === selector.replace('#', '')) {
+      return true;
+    }
+  } else if (selector.charAt(0) === '.') {
+    const attr = element.attributes.filter(attr => attr.name === 'class')[0];
+    if (attr && attr.value === selector.replace('.', '')) {
+      return true;
+    }
+  } else {
+    if (element.tagName === selector) {
+      return true;
+    }
+  }
+
+  return false;
 }
 
 /**
@@ -21,9 +50,86 @@ function addCSSRules(text) {
  * @param {*} element
  */
 function computeCSS(element) {
-  console.log(rules);
-  console.log('compute CSS for Element', element);
-  var elements = stack.slice().reverse();
+  const elements = stack.slice().reverse();
+  if (!element.computedStyle) {
+    element.computedStyle = {};
+  }
+
+  for (const rule of rules) {
+    // 将selector名称翻转，由内向外顺序
+    const selectorParts = rule.selectors[0].split(' ').reverse();
+
+    // 如果不匹配，直接跳过
+    if (!match(element, selectorParts[0])) {
+      continue;
+    }
+
+    let matched = false;
+
+    let j = 1;
+    for (var i = 0; i < elements.length; i++) {
+      if (match(elements[i], selectorParts[j])) {
+        j++;
+      }
+    }
+
+    if (j >= selectorParts.length) {
+      matched = true;
+    }
+
+    if (matched) {
+      // 如果匹配到，将其加入
+      const sp = specificity(rule.selectors[0]);
+      const computedStyle = element.computedStyle;
+      for (const declaration of rule.declarations) {
+        if (!computedStyle[declaration.property]) {
+          computedStyle[declaration.property] = {};
+        }
+
+        if (!computedStyle[declaration.property].specificity) {
+          computedStyle[declaration.property].value = declaration.value;
+          computedStyle[declaration.property].specificity = sp;
+        } else if (
+          compare(computedStyle[declaration.property].specificity, sp) < 0
+        ) {
+          computedStyle[declaration.property].value = declaration.value;
+          computedStyle[declaration.property].specificity = sp;
+        }
+      }
+    }
+  }
+}
+
+/**
+ * 优先级
+ * [inline, id, class, tagName]
+ * @param {*} selector
+ */
+function specificity(selector) {
+  const p = [0, 0, 0, 0];
+  const selectorParts = selector.split(' ');
+  for (const part of selectorParts) {
+    if (part.charAt(0) === '#') {
+      p[1] += 1;
+    } else if (part.charAt(0) === '.') {
+      p[2] += 1;
+    } else {
+      p[3] += 1;
+    }
+  }
+  return p;
+}
+
+/**
+ * 比较
+ * @param {*} sp1
+ * @param {*} sp2
+ */
+function compare(sp1, sp2) {
+  if (sp1[0] - sp2[0]) return sp1[0] - sp2[0];
+  if (sp1[1] - sp2[1]) return sp1[1] - sp2[1];
+  if (sp1[2] - sp2[2]) return sp1[2] - sp2[2];
+  return sp1[3] - sp2[3];
 }
 
 function emit(token) {
@@ -55,7 +161,8 @@ function emit(token) {
 
     // 栈顶元素为当前element的父元素
     top.children.push(element);
-    element.parent = top;
+    // element.parent = top
+
 
     // 如果非自封闭标签，将该元素入栈
     if (!token.isSelfClosing) {

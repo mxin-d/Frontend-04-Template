@@ -22,5 +22,6 @@ void (async function () {
 
   console.log('Response', response);
   const dom = parser(response.body);
-  console.log(dom.children);
+  console.log(dom);
+  console.log(JSON.stringify(dom, null, 2));
 })();
