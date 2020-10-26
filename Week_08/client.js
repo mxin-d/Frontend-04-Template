@@ -1,5 +1,7 @@
 const Request = require('./Request');
 const parser = require('./parser');
+const images = require('images');
+const render = require('./render');
 
 void (async function () {
   const request = new Request({
@@ -22,6 +24,9 @@ void (async function () {
 
   console.log('Response', response);
   const dom = parser(response.body);
-  console.log(dom);
-  console.log(JSON.stringify(dom, null, 2));
+  const viewport = images(800, 600);
+  render(viewport, dom);
+  viewport.save('viewport.jpg');
+  // console.log(dom);
+  // console.log(JSON.stringify(dom, null, 2));
 })();

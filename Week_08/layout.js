@@ -78,8 +78,8 @@ function layout(element) {
   }
   if (style.flexDirection === 'row-reverse') {
     mainSize = 'width';
-    mainStart = 'left';
-    mainEnd = 'right';
+    mainStart = 'right';
+    mainEnd = 'left';
     mainSign = -1;
     mainBase = style.width;
 
@@ -100,8 +100,8 @@ function layout(element) {
   }
   if (style.flexDirection === 'column-reverse') {
     mainSize = 'height';
-    mainStart = 'top';
-    mainEnd = 'bottom';
+    mainStart = 'bottom';
+    mainEnd = 'top';
     mainSign = -1;
     mainBase = style.height;
 
@@ -140,8 +140,8 @@ function layout(element) {
   var crossSpace = 0;
 
   for (let i = 0; i < items.length; i++) {
-    const item = items[i];
-    const itemStyle = getStyle(item);
+    var item = items[i];
+    var itemStyle = getStyle(item);
 
     if (itemStyle[mainSize] === null) {
       itemStyle[mainSize] = 0;
@@ -185,11 +185,11 @@ function layout(element) {
   }
 
   if (mainSpace < 0) {
-    const scale = style[mainSize] / (style[mainSize] - mainSpace);
-    const currentMain = mainBase;
+    var scale = style[mainSize] / (style[mainSize] - mainSpace);
+    var currentMain = mainBase;
     for (let i = 0; i < items.length; i++) {
-      const item = items[i];
-      const itemStyle = getStyle(item);
+      var item = items[i];
+      var itemStyle = getStyle(item);
 
       if (itemStyle.flex) {
         itemStyle[mainSize] = 0;
@@ -205,13 +205,13 @@ function layout(element) {
   } else {
     // process each flex line
     flexLines.forEach(function (items) {
-      let mainSpace = items.mainSpace;
-      let flexTotal = 0;
-      for (let i = 0; i < items.length; i++) {
-        const item = items[i];
-        const itemStyle = getStyle(item);
+      var mainSpace = items.mainSpace;
+      var flexTotal = 0;
+      for (var i = 0; i < items.length; i++) {
+        var item = items[i];
+        var itemStyle = getStyle(item);
 
-        if (item.flex !== null && item.flex !== void 0) {
+        if (itemStyle.flex !== null && itemStyle.flex !== void 0) {
           flexTotal += itemStyle.flex;
           continue;
         }
@@ -219,12 +219,12 @@ function layout(element) {
 
       if (flexTotal > 0) {
         // There is flexible flex items
-        const currentMain = mainBase;
-        for (let i = 0; i < items.length; i++) {
-          const item = items[i];
-          const itemStyle = getStyle(item);
+        var currentMain = mainBase;
+        for (var i = 0; i < items.length; i++) {
+          var item = items[i];
+          var itemStyle = getStyle(item);
 
-          if (item.flex) {
+          if (itemStyle.flex) {
             itemStyle[mainSize] = (mainSpace / flexTotal) * itemStyle.flex;
           }
           itemStyle[mainStart] = currentMain;
@@ -256,7 +256,7 @@ function layout(element) {
         }
         for (let i = 0; i < items.length; i++) {
           const item = items[i];
-          const itemStyle = getStyle(item);
+          // const itemStyle = getStyle(item);
 
           itemStyle[(mainStart, currentMain)];
           itemStyle[mainEnd] =
@@ -365,7 +365,7 @@ function layout(element) {
 
     crossBase += crossSign * (lineCrossSize + step);
   });
-  console.log(items);
+  console.log(JSON.stringify(items, null, 2));
 }
 
 module.exports = layout;

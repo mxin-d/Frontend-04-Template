@@ -19,5 +19,8 @@
   "homepage": "https://github.com/mxin-d/Frontend-04-Template#readme",
   "devDependencies": {
     "css": "^3.0.0"
+  },
+  "dependencies": {
+    "images": "^3.2.3"
   }
 }
