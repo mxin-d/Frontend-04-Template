@@ -1,6 +1,9 @@
 # Week_09 总结
+### 伪元素博客文章总结
+https://juejin.im/post/6888304951311728653
 
-为什么 first-letter 可以设置 float 之类的，而 first-line 不行呢？
+
+### 为什么 first-letter 可以设置 float 之类的，而 first-line 不行呢？
 - 对于 `inline` 水平的元素，其本身就是 `line box`, 就是一行流，因此，不存在所谓的 `first-line` 的说法。因此，`first-line` 伪类/伪元素要想起作用，必须应用在 `block` 水平的元素上，例如 `display` 为如下值的些元素 `block`, `inline-block`, `table-cell` 或 `table-caption` .
 
 - 再由于 `first-line` 伪类/伪元素是处理文字字符的，因此，只有部分的CSS声明可以使用，类似 `float`，`position:absolute` 这些破坏性属性显然是不支持的。
