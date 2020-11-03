@@ -1,0 +1,39 @@
+<body>
+  <h1 id="collections-h1">Classified:</h1>
+  <ul id="collections"></ul>
+  <h1 id="api-h1">Unclassified:</h1>
+  <ul id="api"></ul>
+</body>
+<script src="api.js"></script>
+<script>
+  (function () {
+    const { names, collections } = classify();
+    const ul = document.getElementById('api');
+
+    const apiH1 = document.getElementById('api-h1');
+    apiH1.textContent += names.length;
+
+    const fragment = document.createDocumentFragment();
+    names.forEach(name => {
+      const li = document.createElement('li');
+      li.textContent = name;
+      fragment.appendChild(li);
+    });
+    ul.appendChild(fragment);
+
+    let total = 0;
+    const collectionsUl = document.getElementById('collections');
+    const fragment2 = document.createDocumentFragment();
+    Object.entries(collections).forEach(([name, length]) => {
+      const li = document.createElement('li');
+      li.textContent = name + ': ' + length;
+      total += length;
+      fragment2.appendChild(li);
+    });
+
+    const collectionsH1 = document.getElementById('collections-h1');
+    collectionsH1.textContent += total;
+
+    collectionsUl.appendChild(fragment2);
+  })();
+</script>
