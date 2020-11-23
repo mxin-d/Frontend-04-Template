@@ -1,6 +1,6 @@
 const path = require('path');
 module.exports = {
-  entry: './main.js',
+  entry: './animation-demo.js',
   devServer: {
     contentBase: path.join(__dirname, 'dist'),
     compress: true,
