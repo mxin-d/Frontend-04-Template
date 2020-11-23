@@ -1,4 +1,5 @@
 import { Timeline, Animation } from './animation';
+import { ease } from './ease';
 
 let tl = new Timeline();
 
@@ -11,10 +12,13 @@ tl.add(
     500,
     2000,
     1000,
-    null,
+    ease,
     v => `translateX(${v}px)`
   )
 );
+
+document.querySelector('#el2').style.transition = 'transform ease 2s 1s';
+document.querySelector('#el2').style.transform = 'translateX(500px)';
 
 document
   .querySelector('#pause-btn')
