@@ -22,15 +22,22 @@ export function createElement(type, attributes, ...children) {
   return element;
 }
 
+export const STATE = Symbol('state');
+export const ATTRIBUTE = Symbol('attribute');
+
 export class Component {
-  constructor() {}
+  constructor() {
+    this[STATE] = Object.create(null);
+    this[ATTRIBUTE] = Object.create(null);
+  }
   setAttribute(name, value) {
-    this.root.setAttribute(name, value);
+    this[ATTRIBUTE][name] = value;
   }
   appendChild(child) {
     child.mountTo(this.root);
   }
   mountTo(parent) {
+    if (!this.root) this.render();
     parent.appendChild(this.root);
   }
 }
